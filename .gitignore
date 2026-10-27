@@ -1,0 +1,5 @@
+.venv/
+mujoco_menagerie/
+fk_ground_truth.npz
+__pycache__/
+.DS_Store
