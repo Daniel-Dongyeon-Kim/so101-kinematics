@@ -57,7 +57,7 @@ def rot_z(theta):
     Reading: Modern Robotics section 3.2.1.
     """
     c, s = np.cos(theta), np.sin(theta)
-    raise NotImplementedError("TODO 1: return a 3x3 np.array using c and s")
+    return np.array([[c,-s,0],[s,c,0],[0,0,1]])
 
 
 def make_T(R, p):
@@ -66,7 +66,11 @@ def make_T(R, p):
     Hint: start from np.eye(4), put R in the top-left 3x3 block and p in the
           top 3 entries of the last column. (Modern Robotics section 3.3.1.)
     """
-    raise NotImplementedError("TODO 2: return a 4x4 np.array")
+    T = np.eye(4)
+    T[:3, :3] = R
+    T[:3, 3] = p
+    
+    return T
 
 
 def fk(q):
@@ -84,7 +88,13 @@ def fk(q):
     The ORDER matters: offset first ("move to where the motor is"),
     then rotate ("turn the motor").
     """
-    raise NotImplementedError("TODO 3: walk down the CHAIN")
+
+    T = np.eye(4)
+    for i in range(len(CHAIN)):
+        T = T @ make_T(quat_to_rot(CHAIN[i][2]),CHAIN[i][1]) @ make_T(rot_z(q[i]),np.zeros(3))
+    T = T @ make_T(quat_to_rot(TIP_OFFSET[1]),TIP_OFFSET[0])
+    
+    return T
 
 
 # ---------------------------------------------------------------------------
